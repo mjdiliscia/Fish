@@ -5,38 +5,60 @@
 //  Created by Martin Javier Di Liscia on 25/7/18.
 //
 
-#include <Fish.h>
+#include "Fish.h"
+#include "Enemy.h"
 
 Fish* Fish::createWithSprite(cocos2d::Sprite* sprite) {
     auto newFish = Fish::create();
-    newFish->sprite = sprite;
-    newFish->addChild(sprite);
-    sprite->setPosition(cocos2d::Vec2::ZERO);
-    
-    return newFish;
+    if (sprite && newFish && newFish->initWithSprite(sprite)) {
+        return newFish;
+    }
+    CC_SAFE_DELETE(newFish);
+    return nullptr;
 }
 
-bool Fish::init() {
+bool Fish::initWithSprite(cocos2d::Sprite* sprite) {
     auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
     touchListener = cocos2d::EventListenerTouchOneByOne::create();
-    touchListener->onTouchBegan = CC_CALLBACK_2(Fish::OnTouchBool, this);
-    touchListener->onTouchMoved = CC_CALLBACK_2(Fish::OnTouch, this);
-    touchListener->onTouchEnded = CC_CALLBACK_2(Fish::OnTouch, this);
+    touchListener->onTouchBegan = CC_CALLBACK_2(Fish::onTouchBool, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(Fish::onTouch, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(Fish::onTouch, this);
     eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
+    auto body = cocos2d::PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
+    body->setDynamic(false);
+    setPhysicsBody(body);
+    contactListener = cocos2d::EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(Fish::onEnemyContact, this);
+    
+    
+    this->sprite = sprite;
+    addChild(sprite);
+    sprite->setPosition(cocos2d::Vec2::ZERO);
+    
     return true;
 }
 
-void Fish::OnTouch(cocos2d::Touch* touch, cocos2d::Event* event) {
+void Fish::onTouch(cocos2d::Touch* touch, cocos2d::Event* event) {
     cocos2d::Vec2 direction = touch->getLocation() - this->getPosition();
     this->setRotation(CC_RADIANS_TO_DEGREES(-direction.getAngle()));
+    
+    cocos2d::Director::getInstance()->getRunningScene()->getPhysicsWorld()->queryPoint(CC_CALLBACK_3(Fish::onEnemyTouched, this), touch->getLocation(), nullptr);
 }
 
-bool Fish::OnTouchBool(cocos2d::Touch* touch, cocos2d::Event* event) {
-    OnTouch(touch, event);
+bool Fish::onTouchBool(cocos2d::Touch* touch, cocos2d::Event* event) {
+    onTouch(touch, event);
     return true;
 }
 
-void Fish::update(float delta) {
-    
+bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& shape, void* data) {
+    Enemy* enemy = dynamic_cast<Enemy*> (shape.getBody()->getNode());
+    if (enemy) {
+        
+    }
+    return true;
+}
+
+bool Fish::onEnemyContact(cocos2d::PhysicsContact& contact) {
+    return false;
 }
