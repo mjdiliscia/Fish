@@ -54,11 +54,22 @@ bool Fish::onTouchBool(cocos2d::Touch* touch, cocos2d::Event* event) {
 bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& shape, void* data) {
     Enemy* enemy = dynamic_cast<Enemy*> (shape.getBody()->getNode());
     if (enemy) {
-        
+        cocos2d::Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        exit(0);
+#endif
     }
     return true;
 }
 
 bool Fish::onEnemyContact(cocos2d::PhysicsContact& contact) {
+    Enemy* enemy = nullptr;
+    if (contact.getShapeA()->getBody()->getNode() == this) {
+        enemy = dynamic_cast<Enemy*>(contact.getShapeB()->getBody()->getNode());
+    } else {
+        enemy = dynamic_cast<Enemy*>(contact.getShapeA()->getBody()->getNode());
+    }
+    
+    
     return false;
 }
