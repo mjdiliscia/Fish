@@ -25,6 +25,7 @@
 #include "GameScene.h"
 #include "SimpleAudioEngine.h"
 #include "Fish.h"
+#include "EnemiesManager.h"
 
 USING_NS_CC;
 
@@ -49,6 +50,9 @@ bool Game::init()
     {
         return false;
     }
+
+	if (!Scene::initWithPhysics())
+		return false;
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -118,6 +122,11 @@ bool Game::init()
         // add the sprite as a child to this layer
         this->addChild(fish, 0);
     }
+
+	auto enemiesManager = EnemiesManager::create();
+	if (enemiesManager) {
+		addChild(enemiesManager);
+	}
     return true;
 }
 

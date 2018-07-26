@@ -25,7 +25,7 @@ public:
     CREATE_FUNC(Enemy);
     
 private:
-    constexpr static float SPEED = 2.0;
+    constexpr static float SPEED = 40.0;
     
     cocos2d::Vec2 direction;
     cocos2d::Sprite* sprite;

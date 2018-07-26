@@ -27,10 +27,11 @@ bool Fish::initWithSprite(cocos2d::Sprite* sprite) {
     
     auto body = cocos2d::PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
     body->setDynamic(false);
-    setPhysicsBody(body);
+	addComponent(body);
+
     contactListener = cocos2d::EventListenerPhysicsContact::create();
     contactListener->onContactBegin = CC_CALLBACK_1(Fish::onEnemyContact, this);
-    
+	eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
     
     this->sprite = sprite;
     addChild(sprite);
@@ -53,12 +54,6 @@ bool Fish::onTouchBool(cocos2d::Touch* touch, cocos2d::Event* event) {
 
 bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& shape, void* data) {
     Enemy* enemy = dynamic_cast<Enemy*> (shape.getBody()->getNode());
-    if (enemy) {
-        cocos2d::Director::getInstance()->end();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        exit(0);
-#endif
-    }
     return true;
 }
 
@@ -70,6 +65,12 @@ bool Fish::onEnemyContact(cocos2d::PhysicsContact& contact) {
         enemy = dynamic_cast<Enemy*>(contact.getShapeA()->getBody()->getNode());
     }
     
-    
+	if (enemy) {
+		cocos2d::Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+		exit(0);
+#endif
+	}
+
     return false;
 }
