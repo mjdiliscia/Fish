@@ -28,6 +28,7 @@ private:
     
     const long BULLET_CADENCY = 500;
     const int POOL_SIZE = 5;
+    const cocos2d::Vec2 BULLET_OFFSET = cocos2d::Vec2(30,0);
     
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
     void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);

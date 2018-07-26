@@ -113,7 +113,9 @@ void Fish::fireBullet() {
         bullets.pop_front();
     
         getParent()->addChild(bullet);
-        bullet->setPosition(getPosition());
+        cocos2d::Vec2 rotatedOffset = BULLET_OFFSET;
+        rotatedOffset.rotate(cocos2d::Vec2::ZERO, CC_DEGREES_TO_RADIANS(-getRotation()));
+        bullet->setPosition(getPosition() + rotatedOffset);
         bullet->goTowards(direction, this);
         bullet->scheduleUpdate();
         bullet->release();
