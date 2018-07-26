@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Classes/GameScene.cpp"
-            timestampString = "554319194.447114"
+            timestampString = "554325041.102141"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "Game::init()"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "GameScene::init()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -10,6 +10,13 @@
 #include "Bullet.h"
 #include "GameScene.h"
 
+Fish::~Fish() {
+    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(touchListener);
+    
+    for (auto bullet : bullets)
+        bullet->release();
+}
+
 Fish* Fish::createWithSprite(cocos2d::Sprite* sprite) {
     auto newFish = Fish::create();
     if (sprite && newFish && newFish->initWithSprite(sprite)) {
@@ -32,7 +39,7 @@ bool Fish::initWithSprite(cocos2d::Sprite* sprite) {
     body->setContactTestBitmask(0x2);
 	addComponent(body);
 
-    Game::getInstance()->addContactListener(this, CC_CALLBACK_1(Fish::onEnemyContact, this));
+    GameScene::getInstance()->addContactListener(this, CC_CALLBACK_1(Fish::onEnemyContact, this));
     
     this->sprite = sprite;
     addChild(sprite);
@@ -47,6 +54,7 @@ bool Fish::initWithSprite(cocos2d::Sprite* sprite) {
         
         auto newBullet = Bullet::createWithSprite(sprite);
         newBullet->retain();
+        newBullet->unscheduleUpdate();
         bullets.push_back(newBullet);
     }
     
@@ -93,12 +101,8 @@ bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& s
 bool Fish::onEnemyContact(Node* node) {
     Enemy* enemy = dynamic_cast<Enemy*>(node);
     
-	if (enemy) {
-		cocos2d::Director::getInstance()->end();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-		exit(0);
-#endif
-	}
+	if (enemy)
+        GameScene::getInstance()->end();
 
     return false;
 }

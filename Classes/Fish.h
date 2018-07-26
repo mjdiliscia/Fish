@@ -21,6 +21,7 @@ public:
     void poolBullet(Bullet* bullet);
     virtual void update(float delta);
 
+    ~Fish();
 private:
     // implement the "static create()" method manually
     CREATE_FUNC(Fish);
@@ -37,7 +38,6 @@ private:
     void fireBullet();
 
     std::list<Bullet*> bullets;
-    cocos2d::EventListenerPhysicsContact* contactListener;
     cocos2d::EventListenerTouchOneByOne* touchListener;
     cocos2d::Sprite* sprite;
     cocos2d::Vec2 direction;

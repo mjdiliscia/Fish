@@ -27,27 +27,26 @@
 
 #include "cocos2d.h"
 
-class Game : public cocos2d::Scene
+class GameScene : public cocos2d::Scene
 {
 public:
     static cocos2d::Scene* createScene();
-    static Game* getInstance();
+    static GameScene* getInstance();
 
     virtual bool init();
     
-    // a selector callback
-    void menuCloseCallback(cocos2d::Ref* pSender);
     
     bool onContact(cocos2d::PhysicsContact& contact);
     void addContactListener(Node* node, std::function<void(cocos2d::Node* node)> fnc);
     void removeContactListener(Node* node);
+    void end();
     
     // implement the "static create()" method manually
-    CREATE_FUNC(Game);
-    ~Game();
+    CREATE_FUNC(GameScene);
+    ~GameScene();
     
 private:
-    static Game* instance;
+    static GameScene* instance;
     
     cocos2d::EventListenerPhysicsContact* contactListener;
     std::map<Node*, std::function<void(cocos2d::Node*)>> contactListeners;

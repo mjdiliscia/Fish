@@ -8,6 +8,11 @@
 #include "EnemiesManager.h"
 #include "Enemy.h"
 
+EnemiesManager::~EnemiesManager() {
+    for (auto enemy : enemies)
+        enemy->release();
+}
+
 bool EnemiesManager::init() {
 	while (enemies.size() < POOL_SIZE) {
 		auto enemySprite = cocos2d::Sprite::create("Enemy.png");
@@ -17,6 +22,7 @@ bool EnemiesManager::init() {
         }
 		auto enemy = Enemy::createWithSprite(enemySprite);
 		enemy->retain();
+        enemy->unscheduleUpdate();
 		enemies.push_back(enemy);
 	}
 

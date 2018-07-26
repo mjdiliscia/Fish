@@ -33,7 +33,6 @@ private:
     static cocos2d::Rect playArea;
     
     Fish* manager;
-    cocos2d::EventListenerPhysicsContact* contactListener;
     cocos2d::Sprite* sprite;
     cocos2d::Vec2 direction;
 };

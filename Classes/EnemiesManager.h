@@ -24,6 +24,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(EnemiesManager);
     
+    ~EnemiesManager();
 private:
 	const float SPAWN_TIME = 1.0;
     const int POOL_SIZE = 10;

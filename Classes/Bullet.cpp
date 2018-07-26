@@ -34,7 +34,7 @@ bool Bullet::initWithSprite(cocos2d::Sprite* sprite) {
     body->setContactTestBitmask(0x1);
     addComponent(body);
     
-    Game::getInstance()->addContactListener(this, CC_CALLBACK_1(Bullet::onEnemyContact, this));
+    GameScene::getInstance()->addContactListener(this, CC_CALLBACK_1(Bullet::onEnemyContact, this));
     
     this->sprite = sprite;
     addChild(sprite);
