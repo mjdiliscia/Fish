@@ -29,9 +29,15 @@
 
 USING_NS_CC;
 
+Game* Game::instance = nullptr;
+
 Scene* Game::createScene()
 {
     return Game::create();
+}
+
+Game* Game::getInstance() {
+    return instance;
 }
 
 // Print useful error message instead of segfaulting when files are not there.
@@ -130,6 +136,15 @@ bool Game::init()
     return true;
 }
 
+void Game::onEnter() {
+    if (instance == nullptr)
+        instance = this;
+}
+
+void Game::onExit() {
+    if (instance == this)
+        instance = nullptr;
+}
 
 void Game::menuCloseCallback(Ref* pSender)
 {
@@ -146,4 +161,26 @@ void Game::menuCloseCallback(Ref* pSender)
     //_eventDispatcher->dispatchEvent(&customEndEvent);
 
 
+}
+
+bool Game::onContact(cocos2d::PhysicsContact& contact) {
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+
+    for (auto& kv : contactListeners) {
+        if (kv.first == nodeA)
+            kv.second(nodeA);
+        if (kv.first == nodeB)
+            kv.second(nodeB);
+    }
+    
+    return false;
+}
+
+void Game::addContactListener(Node* node, std::function<void(cocos2d::Node* node)> fnc) {
+    contactListeners[node] = fnc;
+}
+
+void Game::removeContactListener(Node* node) {
+    contactListeners.erase(node);
 }

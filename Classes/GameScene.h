@@ -31,14 +31,26 @@ class Game : public cocos2d::Scene
 {
 public:
     static cocos2d::Scene* createScene();
+    static Game* getInstance();
 
     virtual bool init();
+    virtual void onEnter();
+    virtual void onExit();
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     
+    bool onContact(cocos2d::PhysicsContact& contact);
+    void addContactListener(Node* node, std::function<void(cocos2d::Node* node)> fnc);
+    void removeContactListener(Node* node);
+    
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
+    
+private:
+    static Game* instance;
+    
+    std::map<Node*, std::function<void(cocos2d::Node*)>> contactListeners;
 };
 
 #endif // __GAME_SCENE_H__

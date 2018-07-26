@@ -10,6 +10,8 @@
 
 #include "cocos2d.h"
 
+class EnemiesManager;
+
 class Enemy : public cocos2d::Node
 {
 public:
@@ -18,15 +20,16 @@ public:
     bool initWithSprite(cocos2d::Sprite* sprite);
     virtual void update(float delta);
     
-    void goTowards(cocos2d::Vec2 direction);
+    void goTowards(cocos2d::Vec2 direction, EnemiesManager* manager);
     void receiveHit();
+    
+private:
+    const float SPEED = 40.0;
     
     // implement the "static create()" method manually
     CREATE_FUNC(Enemy);
     
-private:
-    constexpr static float SPEED = 40.0;
-    
+    EnemiesManager* manager;
     cocos2d::Vec2 direction;
     cocos2d::Sprite* sprite;
 };

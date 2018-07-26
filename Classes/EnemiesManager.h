@@ -10,19 +10,24 @@
 
 #include <list>
 #include "cocos2d.h"
-#include "Enemy.h"
+
+class Enemy;
 
 class EnemiesManager : public cocos2d::Node
 {
 public:
 	virtual bool init();
 	virtual void update(float delta);
+    
+    void poolEnemy(Enemy* enemy);
 
-	// implement the "static create()" method manually
-	CREATE_FUNC(EnemiesManager);
-
+    // implement the "static create()" method manually
+    CREATE_FUNC(EnemiesManager);
+    
 private:
 	const float SPAWN_TIME = 1.0;
+    const int POOL_SIZE = 10;
+    const float SPAWN_OFFSET = 70.0;
 
 	std::list<Enemy*> enemies;
 	float nextSpawn;
