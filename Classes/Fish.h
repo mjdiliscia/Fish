@@ -32,7 +32,7 @@ private:
     void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
     void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
     bool onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& shape, void* data);
-    bool onEnemyContact(cocos2d::PhysicsContact& contact);
+    bool onEnemyContact(Node* node);
     
     void fireBullet();
 

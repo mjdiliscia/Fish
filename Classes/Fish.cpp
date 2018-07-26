@@ -8,6 +8,7 @@
 #include "Fish.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "GameScene.h"
 
 Fish* Fish::createWithSprite(cocos2d::Sprite* sprite) {
     auto newFish = Fish::create();
@@ -31,9 +32,7 @@ bool Fish::initWithSprite(cocos2d::Sprite* sprite) {
     body->setContactTestBitmask(0x2);
 	addComponent(body);
 
-    contactListener = cocos2d::EventListenerPhysicsContact::create();
-    contactListener->onContactBegin = CC_CALLBACK_1(Fish::onEnemyContact, this);
-	eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+    Game::getInstance()->addContactListener(this, CC_CALLBACK_1(Fish::onEnemyContact, this));
     
     this->sprite = sprite;
     addChild(sprite);
@@ -91,13 +90,8 @@ bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& s
     return true;
 }
 
-bool Fish::onEnemyContact(cocos2d::PhysicsContact& contact) {
-    Enemy* enemy = nullptr;
-    if (contact.getShapeA()->getBody()->getNode() == this) {
-        enemy = dynamic_cast<Enemy*>(contact.getShapeB()->getBody()->getNode());
-    } else if (contact.getShapeB()->getBody()->getNode() == this) {
-        enemy = dynamic_cast<Enemy*>(contact.getShapeA()->getBody()->getNode());
-    }
+bool Fish::onEnemyContact(Node* node) {
+    Enemy* enemy = dynamic_cast<Enemy*>(node);
     
 	if (enemy) {
 		cocos2d::Director::getInstance()->end();

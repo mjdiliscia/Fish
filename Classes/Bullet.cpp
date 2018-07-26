@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Fish.h"
+#include "GameScene.h"
 
 cocos2d::Rect Bullet::playArea;
 
@@ -33,10 +34,7 @@ bool Bullet::initWithSprite(cocos2d::Sprite* sprite) {
     body->setContactTestBitmask(0x1);
     addComponent(body);
     
-    auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-    contactListener = cocos2d::EventListenerPhysicsContact::create();
-    contactListener->onContactBegin = CC_CALLBACK_1(Bullet::onEnemyContact, this);
-    eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+    Game::getInstance()->addContactListener(this, CC_CALLBACK_1(Bullet::onEnemyContact, this));
     
     this->sprite = sprite;
     addChild(sprite);
@@ -60,13 +58,8 @@ void Bullet::goTowards(cocos2d::Vec2 direction, Fish* manager) {
     setRotation(CC_RADIANS_TO_DEGREES(-direction.getAngle())+90);
 }
 
-bool Bullet::onEnemyContact(cocos2d::PhysicsContact& contact) {
-    Enemy* enemy = nullptr;
-    if (contact.getShapeA()->getBody()->getNode() == this) {
-        enemy = dynamic_cast<Enemy*>(contact.getShapeB()->getBody()->getNode());
-    } else if (contact.getShapeB()->getBody()->getNode() == this) {
-        enemy = dynamic_cast<Enemy*>(contact.getShapeA()->getBody()->getNode());
-    }
+bool Bullet::onEnemyContact(Node* node) {
+    Enemy* enemy = dynamic_cast<Enemy*>(node);
     
     if (enemy) {
         enemy->receiveHit();

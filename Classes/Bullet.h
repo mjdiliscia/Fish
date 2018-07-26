@@ -28,7 +28,7 @@ private:
     // implement the "static create()" method manually
     CREATE_FUNC(Bullet);
     
-    bool onEnemyContact(cocos2d::PhysicsContact& contact);
+    bool onEnemyContact(Node* node);
     
     static cocos2d::Rect playArea;
     

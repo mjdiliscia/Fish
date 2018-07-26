@@ -34,8 +34,6 @@ public:
     static Game* getInstance();
 
     virtual bool init();
-    virtual void onEnter();
-    virtual void onExit();
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
@@ -46,10 +44,12 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(Game);
+    ~Game();
     
 private:
     static Game* instance;
     
+    cocos2d::EventListenerPhysicsContact* contactListener;
     std::map<Node*, std::function<void(cocos2d::Node*)>> contactListeners;
 };
 

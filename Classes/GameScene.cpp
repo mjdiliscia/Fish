@@ -60,6 +60,9 @@ bool Game::init()
 	if (!Scene::initWithPhysics())
 		return false;
 
+    if (instance == nullptr)
+        instance = this;
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -133,15 +136,16 @@ bool Game::init()
 	if (enemiesManager) {
 		addChild(enemiesManager);
 	}
+
+    auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
+    contactListener = cocos2d::EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(Game::onContact, this);
+    eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
     return true;
 }
 
-void Game::onEnter() {
-    if (instance == nullptr)
-        instance = this;
-}
-
-void Game::onExit() {
+Game::~Game() {
     if (instance == this)
         instance = nullptr;
 }
@@ -169,9 +173,9 @@ bool Game::onContact(cocos2d::PhysicsContact& contact) {
 
     for (auto& kv : contactListeners) {
         if (kv.first == nodeA)
-            kv.second(nodeA);
-        if (kv.first == nodeB)
             kv.second(nodeB);
+        if (kv.first == nodeB)
+            kv.second(nodeA);
     }
     
     return false;
