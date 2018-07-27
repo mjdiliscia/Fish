@@ -10,9 +10,11 @@
 #include "Fish.h"
 #include "GameScene.h"
 
-cocos2d::Rect Bullet::playArea;
+USING_NS_CC;
 
-Bullet* Bullet::createWithSprite(cocos2d::Sprite* sprite) {
+Rect Bullet::playArea;
+
+Bullet* Bullet::createWithSprite(Sprite* sprite) {
     auto newBullet = Bullet::create();
     if (sprite && newBullet && newBullet->initWithSprite(sprite)) {
         return newBullet;
@@ -22,14 +24,14 @@ Bullet* Bullet::createWithSprite(cocos2d::Sprite* sprite) {
     return nullptr;
 }
 
-bool Bullet::initWithSprite(cocos2d::Sprite* sprite) {
-    if (playArea.equals(cocos2d::Rect::ZERO)) {
-        playArea = cocos2d::Rect(cocos2d::Vec2::ONE*(-PLAY_AREA_OFFSET), cocos2d::Director::getInstance()->getVisibleSize() + cocos2d::Size(PLAY_AREA_OFFSET*2, PLAY_AREA_OFFSET*2));
+bool Bullet::initWithSprite(Sprite* sprite) {
+    if (playArea.equals(Rect::ZERO)) {
+        playArea = Rect(Vec2::ONE*(-PLAY_AREA_OFFSET), Director::getInstance()->getVisibleSize() + Size(PLAY_AREA_OFFSET*2, PLAY_AREA_OFFSET*2));
     }
     
-    direction = cocos2d::Vec2::ZERO;
+    direction = Vec2::ZERO;
     
-    auto body = cocos2d::PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
+    auto body = PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
     body->setDynamic(false);
     body->setContactTestBitmask(0x1);
     addComponent(body);
@@ -38,7 +40,7 @@ bool Bullet::initWithSprite(cocos2d::Sprite* sprite) {
     
     this->sprite = sprite;
     addChild(sprite);
-    sprite->setPosition(cocos2d::Vec2::ZERO);
+    sprite->setPosition(Vec2::ZERO);
     
     return true;
 }
@@ -52,7 +54,7 @@ void Bullet::update(float delta) {
         manager->poolBullet(this);
 }
 
-void Bullet::goTowards(cocos2d::Vec2 direction, Fish* manager) {
+void Bullet::goTowards(Vec2 direction, Fish* manager) {
     this->manager = manager;
     this->direction = direction;
     setRotation(CC_RADIANS_TO_DEGREES(-direction.getAngle())+90);

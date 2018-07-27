@@ -10,13 +10,15 @@
 
 #include "cocos2d.h"
 
-class MenuScene : public cocos2d::Scene {
+USING_NS_CC;
+
+class MenuScene : public Scene {
 public:
-    static cocos2d::Scene* createScene();
+    static Scene* createScene();
     
     virtual bool init();
     
-    void menuCloseCallback(cocos2d::Ref* pSender);
+    void menuCloseCallback(Ref* pSender);
 
     // implement the "static create()" method manually
     CREATE_FUNC(MenuScene);

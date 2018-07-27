@@ -10,17 +10,19 @@
 
 #include "cocos2d.h"
 
+USING_NS_CC;
+
 class EnemiesManager;
 
-class Enemy : public cocos2d::Node
+class Enemy : public Node
 {
 public:
-    static Enemy* createWithSprite(cocos2d::Sprite* sprite);
+    static Enemy* createWithSprite(Sprite* sprite);
     
-    bool initWithSprite(cocos2d::Sprite* sprite);
+    bool initWithSprite(Sprite* sprite);
     virtual void update(float delta);
     
-    void goTowards(cocos2d::Vec2 direction, EnemiesManager* manager);
+    void goTowards(Vec2 direction, EnemiesManager* manager);
     void receiveHit();
     
 private:
@@ -30,8 +32,8 @@ private:
     CREATE_FUNC(Enemy);
     
     EnemiesManager* manager;
-    cocos2d::Vec2 direction;
-    cocos2d::Sprite* sprite;
+    Vec2 direction;
+    Sprite* sprite;
 };
 
 #endif /* Enemy_h */

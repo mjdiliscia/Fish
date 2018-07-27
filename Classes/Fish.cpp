@@ -11,14 +11,16 @@
 #include "GameScene.h"
 #include <cmath>
 
+USING_NS_CC;
+
 Fish::~Fish() {
-    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(touchListener);
+    Director::getInstance()->getEventDispatcher()->removeEventListener(touchListener);
     
     for (auto bullet : bullets)
         bullet->release();
 }
 
-Fish* Fish::createWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting) {
+Fish* Fish::createWithSprites(Sprite* idle, Sprite* shooting) {
     auto newFish = Fish::create();
     if (idle && shooting && newFish && newFish->initWithSprites(idle, shooting)) {
         return newFish;
@@ -27,15 +29,15 @@ Fish* Fish::createWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting) 
     return nullptr;
 }
 
-bool Fish::initWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting) {
-    auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-    touchListener = cocos2d::EventListenerTouchOneByOne::create();
+bool Fish::initWithSprites(Sprite* idle, Sprite* shooting) {
+    auto eventDispatcher = Director::getInstance()->getEventDispatcher();
+    touchListener = EventListenerTouchOneByOne::create();
     touchListener->onTouchBegan = CC_CALLBACK_2(Fish::onTouchBegan, this);
     touchListener->onTouchMoved = CC_CALLBACK_2(Fish::onTouchMoved, this);
     touchListener->onTouchEnded = CC_CALLBACK_2(Fish::onTouchEnded, this);
     eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
-    auto body = cocos2d::PhysicsBody::createCircle(idle->getContentSize().width / 2.0);
+    auto body = PhysicsBody::createCircle(idle->getContentSize().width / 2.0);
     body->setDynamic(false);
     body->setContactTestBitmask(0x2);
 	addComponent(body);
@@ -44,16 +46,16 @@ bool Fish::initWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting) {
     
     this->idle = idle;
     addChild(idle);
-    idle->setPosition(cocos2d::Vec2::ZERO);
+    idle->setPosition(Vec2::ZERO);
     this->shooting = shooting;
     addChild(shooting);
-    shooting->setPosition(cocos2d::Vec2::ZERO);
+    shooting->setPosition(Vec2::ZERO);
     shooting->setVisible(false);
 
     while (bullets.size() < POOL_SIZE) {
-        auto sprite = cocos2d::Sprite::create("Bullet.png");
+        auto sprite = Sprite::create("bubble.png");
         if (!sprite) {
-            cocos2d::log("Bullet.png not found");
+            log("bubble.png not found");
             return false;
         }
         
@@ -78,35 +80,35 @@ void Fish::update(float delta) {
         setRotation(getRotation() + rotationAngle);
         
         if (std::abs(rotationAngle - angleDiff) <= SHOOT_ANGLE)
-            cocos2d::Director::getInstance()->getRunningScene()->getPhysicsWorld()->queryPoint(CC_CALLBACK_3(Fish::onEnemyTouched, this), touchPos, nullptr);
+            Director::getInstance()->getRunningScene()->getPhysicsWorld()->queryPoint(CC_CALLBACK_3(Fish::onEnemyTouched, this), touchPos, nullptr);
     }
     
-    long timestamp = cocos2d::utils::getTimeInMilliseconds();
+    long timestamp = utils::getTimeInMilliseconds();
     if (lastBulletTimestamp + SHOOT_DURATION < timestamp && (!idle->isVisible() || shooting->isVisible())) {
         shooting->setVisible(false);
         idle->setVisible(true);
     }
 }
 
-void Fish::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event) {
+void Fish::onTouchMoved(Touch* touch, Event* event) {
     touchPos = touch->getLocation();
 }
 
-bool Fish::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event) {
+bool Fish::onTouchBegan(Touch* touch, Event* event) {
     touching = true;
     touchPos = touch->getLocation();
     
     return true;
 }
 
-void Fish::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event) {
+void Fish::onTouchEnded(Touch* touch, Event* event) {
     touching = false;
 }
 
-bool Fish::onEnemyTouched(cocos2d::PhysicsWorld& world, cocos2d::PhysicsShape& shape, void* data) {
+bool Fish::onEnemyTouched(PhysicsWorld& world, PhysicsShape& shape, void* data) {
     Enemy* enemy = dynamic_cast<Enemy*> (shape.getBody()->getNode());
     if (enemy) {
-        long timestamp = cocos2d::utils::getTimeInMilliseconds();
+        long timestamp = utils::getTimeInMilliseconds();
         if (lastBulletTimestamp + BULLET_CADENCY < timestamp) {
             fireBullet();
             lastBulletTimestamp = timestamp;
@@ -131,8 +133,8 @@ void Fish::fireBullet() {
         bullets.pop_front();
     
         getParent()->addChild(bullet);
-        cocos2d::Vec2 rotatedOffset = BULLET_OFFSET;
-        rotatedOffset.rotate(cocos2d::Vec2::ZERO, CC_DEGREES_TO_RADIANS(-getRotation()));
+        Vec2 rotatedOffset = BULLET_OFFSET;
+        rotatedOffset.rotate(Vec2::ZERO, CC_DEGREES_TO_RADIANS(-getRotation()));
         bullet->setPosition(getPosition() + rotatedOffset);
         bullet->goTowards(direction, this);
         bullet->scheduleUpdate();

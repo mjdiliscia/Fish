@@ -8,6 +8,8 @@
 #include "EnemiesManager.h"
 #include "Enemy.h"
 
+USING_NS_CC;
+
 EnemiesManager::~EnemiesManager() {
     for (auto enemy : enemies)
         enemy->release();
@@ -15,9 +17,9 @@ EnemiesManager::~EnemiesManager() {
 
 bool EnemiesManager::init() {
 	while (enemies.size() < POOL_SIZE) {
-		auto enemySprite = cocos2d::Sprite::create("Enemy.png");
+		auto enemySprite = Sprite::create("badFish.png");
         if (!enemySprite) {
-            cocos2d::log("Enemy.png not found");
+            log("badFish.png not found");
             return false;
         }
 		auto enemy = Enemy::createWithSprite(enemySprite);
@@ -41,17 +43,17 @@ void EnemiesManager::update(float delta) {
 			Enemy* enemy = enemies.front();
 			enemies.pop_front();
 
-			cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+			Size visibleSize = Director::getInstance()->getVisibleSize();
 			float x, y;
-			if (cocos2d::rand_0_1() > 0.5) {
-				x = cocos2d::random() > RAND_MAX / 2 ? -SPAWN_OFFSET : visibleSize.width + SPAWN_OFFSET;
-				y = cocos2d::rand_0_1() * visibleSize.height;
+			if (rand_0_1() > 0.5) {
+                x = cocos2d::random() > RAND_MAX / 2 ? -SPAWN_OFFSET : visibleSize.width + SPAWN_OFFSET;
+				y = rand_0_1() * visibleSize.height;
 			} else {
-				x = cocos2d::rand_0_1() * visibleSize.width;
+				x = rand_0_1() * visibleSize.width;
 				y = cocos2d::random() > RAND_MAX / 2 ? -SPAWN_OFFSET : visibleSize.height + SPAWN_OFFSET;
 			}
-			cocos2d::Vec2 position = cocos2d::Vec2(x, y);
-			cocos2d::Vec2 center = visibleSize / 2.0;
+			Vec2 position = Vec2(x, y);
+			Vec2 center = visibleSize / 2.0;
 
 			addChild(enemy);
             enemy->scheduleUpdate();

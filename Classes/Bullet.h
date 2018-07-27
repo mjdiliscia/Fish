@@ -10,16 +10,18 @@
 
 #include "cocos2d.h"
 
+USING_NS_CC;
+
 class Fish;
 
-class Bullet : public cocos2d::Node {
+class Bullet : public Node {
 public:
-    static Bullet* createWithSprite(cocos2d::Sprite* sprite);
+    static Bullet* createWithSprite(Sprite* sprite);
     
-    bool initWithSprite(cocos2d::Sprite* sprite);
+    bool initWithSprite(Sprite* sprite);
     virtual void update(float delta);
 
-    void goTowards(cocos2d::Vec2 direction, Fish* manager);
+    void goTowards(Vec2 direction, Fish* manager);
     
 private:
     const float SPEED = 80.0;
@@ -30,11 +32,11 @@ private:
     
     bool onEnemyContact(Node* node);
     
-    static cocos2d::Rect playArea;
+    static Rect playArea;
     
     Fish* manager;
-    cocos2d::Sprite* sprite;
-    cocos2d::Vec2 direction;
+    Sprite* sprite;
+    Vec2 direction;
 };
 
 #endif /* Bullet_h */

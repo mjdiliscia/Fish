@@ -8,8 +8,9 @@
 #include "Enemy.h"
 #include "EnemiesManager.h"
 
+USING_NS_CC;
 
-Enemy* Enemy::createWithSprite(cocos2d::Sprite* sprite) {
+Enemy* Enemy::createWithSprite(Sprite* sprite) {
     auto newEnemy = Enemy::create();
     if (sprite && newEnemy && newEnemy->initWithSprite(sprite)) {
         return newEnemy;
@@ -19,17 +20,17 @@ Enemy* Enemy::createWithSprite(cocos2d::Sprite* sprite) {
     return nullptr;
 }
 
-bool Enemy::initWithSprite(cocos2d::Sprite* sprite) {
-    direction = cocos2d::Vec2::ZERO;
+bool Enemy::initWithSprite(Sprite* sprite) {
+    direction = Vec2::ZERO;
     
-    auto body = cocos2d::PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
+    auto body = PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
     body->setDynamic(false);
     body->setContactTestBitmask(0x3);
     addComponent(body);
 
     this->sprite = sprite;
     addChild(sprite);
-    sprite->setPosition(cocos2d::Vec2::ZERO);
+    sprite->setPosition(Vec2::ZERO);
 
     return true;
 }
@@ -40,7 +41,7 @@ void Enemy::update(float delta) {
 	setPosition(position);
 }
 
-void Enemy::goTowards(cocos2d::Vec2 direction, EnemiesManager* manager) {
+void Enemy::goTowards(Vec2 direction, EnemiesManager* manager) {
     this->manager = manager;
     this->direction = direction;
 	setRotation(CC_RADIANS_TO_DEGREES(-direction.getAngle())+90);

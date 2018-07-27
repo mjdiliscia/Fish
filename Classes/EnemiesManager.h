@@ -11,6 +11,8 @@
 #include <list>
 #include "cocos2d.h"
 
+USING_NS_CC;
+
 class Enemy;
 
 class EnemiesManager : public cocos2d::Node

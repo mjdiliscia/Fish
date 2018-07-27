@@ -27,17 +27,19 @@
 
 #include "cocos2d.h"
 
-class GameScene : public cocos2d::Scene
+USING_NS_CC;
+
+class GameScene : public Scene
 {
 public:
-    static cocos2d::Scene* createScene();
+    static Scene* createScene();
     static GameScene* getInstance();
 
     virtual bool init();
     
     
-    bool onContact(cocos2d::PhysicsContact& contact);
-    void addContactListener(Node* node, std::function<void(cocos2d::Node* node)> fnc);
+    bool onContact(PhysicsContact& contact);
+    void addContactListener(Node* node, std::function<void(Node* node)> fnc);
     void removeContactListener(Node* node);
     void end();
     
@@ -48,8 +50,8 @@ public:
 private:
     static GameScene* instance;
     
-    cocos2d::EventListenerPhysicsContact* contactListener;
-    std::map<Node*, std::function<void(cocos2d::Node*)>> contactListeners;
+    EventListenerPhysicsContact* contactListener;
+    std::map<Node*, std::function<void(Node*)>> contactListeners;
 };
 
 #endif // __GAME_SCENE_H__

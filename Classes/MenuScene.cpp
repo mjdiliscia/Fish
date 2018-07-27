@@ -9,7 +9,9 @@
 #include "GameScene.h"
 #include "ui/UIButton.h"
 
-cocos2d::Scene* MenuScene::createScene() {
+USING_NS_CC;
+
+Scene* MenuScene::createScene() {
     return MenuScene::create();
 }
 
@@ -18,36 +20,44 @@ bool MenuScene::init() {
         return false;
     }
     
-    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-    auto origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto origin = Director::getInstance()->getVisibleOrigin();
     
-    auto playButton = cocos2d::ui::Button::create("CloseNormal.png", "CloseSelected.png");
+    auto background = Sprite::create("menuBackground.png");
+    if (background == nullptr) {
+        log("Problem loading 'menuBackground.png'");
+    } else {
+        background->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+        this->addChild(background, 0);
+    }
+    
+    auto playButton = ui::Button::create("buttonRed.png", "buttonRedPressed.png");
     if (playButton) {
-        cocos2d::Size buttonSize = cocos2d::Size(100,60);
+        Size buttonSize = Size(100,60);
         addChild(playButton);
         playButton->setTitleText("Play");
         playButton->setTitleFontSize(30);
         playButton->setScale9Enabled(true);
-        playButton->setCapInsets(cocos2d::Rect(10,10,50,50));
+        playButton->setCapInsets(Rect(10,10,50,50));
         playButton->setContentSize(buttonSize);
-        playButton->setPosition(cocos2d::Vec2(visibleSize/2));
+        playButton->setPosition(Vec2(visibleSize/2));
         playButton->addClickEventListener(CC_CALLBACK_1(MenuScene::menuCloseCallback, this));
     } else {
-        cocos2d::log("Problem loading 'CloseNormal.png' or 'CloseSelected.png'");
+        log("Problem loading 'buttonRed.png' or 'buttonRedPressed.png'");
         return false;
     }
     
-    auto label = cocos2d::Label::createWithTTF("Fish attack!", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("Fish attack!", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr) {
-        cocos2d::log("Problem loading 'fonts/Marker Felt.ttf'");
+        log("Problem loading 'fonts/Marker Felt.ttf'");
     } else {
-        label->setPosition(cocos2d::Vec2(origin.x + visibleSize.width/2, origin.y + visibleSize.height - label->getContentSize().height));
+        label->setPosition(Vec2(origin.x + visibleSize.width/2, origin.y + visibleSize.height - label->getContentSize().height));
         this->addChild(label, 1);
     }
     
     return true;
 }
 
-void MenuScene::menuCloseCallback(cocos2d::Ref* pSender) {
-    cocos2d::Director::getInstance()->replaceScene(GameScene::create());
+void MenuScene::menuCloseCallback(Ref* pSender) {
+    Director::getInstance()->replaceScene(GameScene::create());
 }

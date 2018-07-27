@@ -38,15 +38,23 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto idle = Sprite::create("Fish.png");
-    auto shooting = Sprite::create("FishBubble.png");
+    auto background = Sprite::create("background.png");
+    if (background == nullptr) {
+        log("Problem loading 'background.png'");
+    } else {
+        background->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+        this->addChild(background, 0);
+    }
+    
+    auto idle = Sprite::create("fish.png");
+    auto shooting = Sprite::create("fishBubble.png");
     if (idle == nullptr || shooting == nullptr) {
-        cocos2d::log("Problem loading 'Fish.png' or 'FishBubble.png'");
+        log("Problem loading 'fish.png' or 'fishBubble.png'");
     } else {
         auto fish = Fish::createWithSprites(idle, shooting);
         fish->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
-        this->addChild(fish, 0);
+        this->addChild(fish);
     }
 
 	auto enemiesManager = EnemiesManager::create();
@@ -54,8 +62,8 @@ bool GameScene::init()
 		addChild(enemiesManager);
 	}
 
-    auto eventDispatcher = cocos2d::Director::getInstance()->getEventDispatcher();
-    contactListener = cocos2d::EventListenerPhysicsContact::create();
+    auto eventDispatcher = Director::getInstance()->getEventDispatcher();
+    contactListener = EventListenerPhysicsContact::create();
     contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContact, this);
     eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
@@ -66,10 +74,10 @@ GameScene::~GameScene() {
     if (instance == this)
         instance = nullptr;
     
-    cocos2d::Director::getInstance()->getEventDispatcher()->removeEventListener(contactListener);
+    Director::getInstance()->getEventDispatcher()->removeEventListener(contactListener);
 }
 
-bool GameScene::onContact(cocos2d::PhysicsContact& contact) {
+bool GameScene::onContact(PhysicsContact& contact) {
     auto nodeA = contact.getShapeA()->getBody()->getNode();
     auto nodeB = contact.getShapeB()->getBody()->getNode();
 
@@ -83,7 +91,7 @@ bool GameScene::onContact(cocos2d::PhysicsContact& contact) {
     return false;
 }
 
-void GameScene::addContactListener(Node* node, std::function<void(cocos2d::Node* node)> fnc) {
+void GameScene::addContactListener(Node* node, std::function<void(Node* node)> fnc) {
     contactListeners[node] = fnc;
 }
 
@@ -92,5 +100,5 @@ void GameScene::removeContactListener(Node* node) {
 }
 
 void GameScene::end() {
-    cocos2d::Director::getInstance()->replaceScene(MenuScene::create());
+    Director::getInstance()->replaceScene(MenuScene::create());
 }
