@@ -15,9 +15,9 @@ class Bullet;
 class Fish : public cocos2d::Node
 {
 public:
-    static Fish* createWithSprite(cocos2d::Sprite* sprite);
+    static Fish* createWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting);
     
-    bool initWithSprite(cocos2d::Sprite* sprite);
+    bool initWithSprites(cocos2d::Sprite* idle, cocos2d::Sprite* shooting);
     void poolBullet(Bullet* bullet);
     virtual void update(float delta);
 
@@ -27,7 +27,10 @@ private:
     CREATE_FUNC(Fish);
     
     const long BULLET_CADENCY = 500;
+    const long SHOOT_DURATION = 300;
+    const float SHOOT_ANGLE = 5;
     const int POOL_SIZE = 5;
+    const float ROTATION_SPEED = 180;
     const cocos2d::Vec2 BULLET_OFFSET = cocos2d::Vec2(30,0);
     
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
@@ -40,7 +43,8 @@ private:
 
     std::list<Bullet*> bullets;
     cocos2d::EventListenerTouchOneByOne* touchListener;
-    cocos2d::Sprite* sprite;
+    cocos2d::Sprite* idle;
+    cocos2d::Sprite* shooting;
     cocos2d::Vec2 direction;
     long lastBulletTimestamp;
     bool touching;

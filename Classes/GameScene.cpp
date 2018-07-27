@@ -38,14 +38,12 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto sprite = Sprite::create("Fish.png");
-    if (sprite == nullptr)
-    {
-        cocos2d::log("Problem loading 'Fish.png'");
-    }
-    else
-    {
-        auto fish = Fish::createWithSprite(sprite);
+    auto idle = Sprite::create("Fish.png");
+    auto shooting = Sprite::create("FishBubble.png");
+    if (idle == nullptr || shooting == nullptr) {
+        cocos2d::log("Problem loading 'Fish.png' or 'FishBubble.png'");
+    } else {
+        auto fish = Fish::createWithSprites(idle, shooting);
         fish->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
         this->addChild(fish, 0);
