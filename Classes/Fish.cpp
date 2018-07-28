@@ -73,6 +73,8 @@ bool Fish::initWithSprites(Sprite* idle, Sprite* shooting) {
 }
 
 void Fish::update(float delta) {
+    time += (long)(delta*1000);
+
     if (touching) {
         direction = (touchPos - this->getPosition()).getNormalized();
         float angleDiff = CC_RADIANS_TO_DEGREES(-direction.getAngle()) - (getRotation()+90);
@@ -87,8 +89,7 @@ void Fish::update(float delta) {
             Director::getInstance()->getRunningScene()->getPhysicsWorld()->queryPoint(CC_CALLBACK_3(Fish::onEnemyTouched, this), touchPos, nullptr);
     }
     
-    long timestamp = utils::getTimeInMilliseconds();
-    if (lastBulletTimestamp + SHOOT_DURATION < timestamp && (!idle->isVisible() || shooting->isVisible())) {
+    if (lastBulletTimestamp + SHOOT_DURATION < time && (!idle->isVisible() || shooting->isVisible())) {
         shooting->setVisible(false);
         idle->setVisible(true);
     }
@@ -112,10 +113,9 @@ void Fish::onTouchEnded(Touch* touch, Event* event) {
 bool Fish::onEnemyTouched(PhysicsWorld& world, PhysicsShape& shape, void* data) {
     Enemy* enemy = dynamic_cast<Enemy*> (shape.getBody()->getNode());
     if (enemy) {
-        long timestamp = utils::getTimeInMilliseconds();
-        if (lastBulletTimestamp + BULLET_CADENCY < timestamp) {
+        if (lastBulletTimestamp + BULLET_CADENCY < time) {
             fireBullet();
-            lastBulletTimestamp = timestamp;
+            lastBulletTimestamp = time;
         }
     }
     

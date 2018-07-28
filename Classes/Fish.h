@@ -50,9 +50,10 @@ private:
     Sprite* idle;
     Sprite* shooting;
     Vec2 direction;
-    long lastBulletTimestamp;
-    bool touching;
-    Vec2 touchPos;
+    long time = 0;
+    long lastBulletTimestamp = 0;
+    bool touching = false;
+    Vec2 touchPos = Vec2::ZERO;
 };
 
 #endif /* Fish_h */
