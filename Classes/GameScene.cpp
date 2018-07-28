@@ -46,14 +46,11 @@ bool GameScene::init()
         this->addChild(background, 0);
     }
     
-    auto idle = Sprite::create("fish.png");
-    auto shooting = Sprite::create("fishBubble.png");
-    if (idle == nullptr || shooting == nullptr) {
+    auto fish = Fish::createWithSprites("fish.png", "fishBubble.png");
+    if (!fish) {
         log("Problem loading 'fish.png' or 'fishBubble.png'");
     } else {
-        auto fish = Fish::createWithSprites(idle, shooting);
         fish->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
         this->addChild(fish);
     }
 

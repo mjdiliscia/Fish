@@ -17,12 +17,11 @@ EnemiesManager::~EnemiesManager() {
 
 bool EnemiesManager::init() {
 	while (enemies.size() < POOL_SIZE) {
-		auto enemySprite = Sprite::create("badFish.png");
-        if (!enemySprite) {
+		auto enemy = Enemy::createWithSprite("badFish.png");
+        if (!enemy) {
             log("badFish.png not found");
             return false;
         }
-		auto enemy = Enemy::createWithSprite(enemySprite);
 		enemy->retain();
         enemy->unscheduleUpdate();
 		enemies.push_back(enemy);

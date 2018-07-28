@@ -20,9 +20,11 @@ Fish::~Fish() {
         bullet->release();
 }
 
-Fish* Fish::createWithSprites(Sprite* idle, Sprite* shooting) {
+Fish* Fish::createWithSprites(std::string idle, std::string shooting) {
+    auto idleSprite = Sprite::create(idle);
+    auto shootingSprite = Sprite::create(shooting);
     auto newFish = Fish::create();
-    if (idle && shooting && newFish && newFish->initWithSprites(idle, shooting)) {
+    if (idleSprite && shootingSprite && newFish && newFish->initWithSprites(idleSprite, shootingSprite)) {
         return newFish;
     }
     CC_SAFE_DELETE(newFish);
@@ -37,7 +39,7 @@ bool Fish::initWithSprites(Sprite* idle, Sprite* shooting) {
     touchListener->onTouchEnded = CC_CALLBACK_2(Fish::onTouchEnded, this);
     eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     
-    auto body = PhysicsBody::createCircle(idle->getContentSize().width / 2.0);
+    auto body = PhysicsBody::createCircle(idle->getContentSize().width / 2.0 * SCALE);
     body->setDynamic(false);
     body->setContactTestBitmask(0x2);
 	addComponent(body);
@@ -47,19 +49,21 @@ bool Fish::initWithSprites(Sprite* idle, Sprite* shooting) {
     this->idle = idle;
     addChild(idle);
     idle->setPosition(Vec2::ZERO);
+    idle->setScale(SCALE);
+    
     this->shooting = shooting;
     addChild(shooting);
     shooting->setPosition(Vec2::ZERO);
+    shooting->setScale(SCALE);
     shooting->setVisible(false);
 
     while (bullets.size() < POOL_SIZE) {
-        auto sprite = Sprite::create("bubble.png");
-        if (!sprite) {
+        auto newBullet = Bullet::createWithSprite("bubble.png");
+        if (!newBullet) {
             log("bubble.png not found");
             return false;
         }
         
-        auto newBullet = Bullet::createWithSprite(sprite);
         newBullet->retain();
         newBullet->unscheduleUpdate();
         bullets.push_back(newBullet);
@@ -71,7 +75,7 @@ bool Fish::initWithSprites(Sprite* idle, Sprite* shooting) {
 void Fish::update(float delta) {
     if (touching) {
         direction = (touchPos - this->getPosition()).getNormalized();
-        float angleDiff = CC_RADIANS_TO_DEGREES(-direction.getAngle()) - getRotation();
+        float angleDiff = CC_RADIANS_TO_DEGREES(-direction.getAngle()) - (getRotation()+90);
         if (std::abs(angleDiff) > 180)
             angleDiff = (360 - std::abs(angleDiff)) * (angleDiff > 0.0 ? -1.0 : 1.0);
         float rotationAngle = angleDiff;
@@ -134,7 +138,7 @@ void Fish::fireBullet() {
     
         getParent()->addChild(bullet);
         Vec2 rotatedOffset = BULLET_OFFSET;
-        rotatedOffset.rotate(Vec2::ZERO, CC_DEGREES_TO_RADIANS(-getRotation()));
+        rotatedOffset.rotate(Vec2::ZERO, CC_DEGREES_TO_RADIANS(-getRotation()-90));
         bullet->setPosition(getPosition() + rotatedOffset);
         bullet->goTowards(direction, this);
         bullet->scheduleUpdate();

@@ -9,6 +9,7 @@
 #define Bullet_h
 
 #include "cocos2d.h"
+#include <string>
 
 USING_NS_CC;
 
@@ -16,7 +17,7 @@ class Fish;
 
 class Bullet : public Node {
 public:
-    static Bullet* createWithSprite(Sprite* sprite);
+    static Bullet* createWithSprite(std::string spriteFile);
     
     bool initWithSprite(Sprite* sprite);
     virtual void update(float delta);
@@ -24,6 +25,7 @@ public:
     void goTowards(Vec2 direction, Fish* manager);
     
 private:
+    const float SCALE = 0.2;
     const float SPEED = 80.0;
     const float PLAY_AREA_OFFSET = 70.0;
     

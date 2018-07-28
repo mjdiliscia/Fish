@@ -14,7 +14,8 @@ USING_NS_CC;
 
 Rect Bullet::playArea;
 
-Bullet* Bullet::createWithSprite(Sprite* sprite) {
+Bullet* Bullet::createWithSprite(std::string spriteFile) {
+    auto sprite = Sprite::create(spriteFile);
     auto newBullet = Bullet::create();
     if (sprite && newBullet && newBullet->initWithSprite(sprite)) {
         return newBullet;
@@ -31,7 +32,7 @@ bool Bullet::initWithSprite(Sprite* sprite) {
     
     direction = Vec2::ZERO;
     
-    auto body = PhysicsBody::createCircle(sprite->getContentSize().width / 2.0);
+    auto body = PhysicsBody::createCircle(sprite->getContentSize().width / 2.0 * SCALE);
     body->setDynamic(false);
     body->setContactTestBitmask(0x1);
     addComponent(body);
@@ -41,6 +42,7 @@ bool Bullet::initWithSprite(Sprite* sprite) {
     this->sprite = sprite;
     addChild(sprite);
     sprite->setPosition(Vec2::ZERO);
+    sprite->setScale(SCALE);
     
     return true;
 }

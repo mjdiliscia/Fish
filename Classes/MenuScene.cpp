@@ -23,12 +23,18 @@ bool MenuScene::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto origin = Director::getInstance()->getVisibleOrigin();
     
-    auto background = Sprite::create("menuBackground.png");
-    if (background == nullptr) {
-        log("Problem loading 'menuBackground.png'");
+    auto background = Sprite::create("background.png");
+    auto backgroundOverlay = Sprite::create("menuBackground.png");
+    if (!background || !backgroundOverlay) {
+        log("Problem loading 'menuBackground.png' or 'background.png'");
     } else {
-        background->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-        this->addChild(background, 0);
+        background->setPosition(Vec2(visibleSize/2) + origin);
+        addChild(background);
+        
+        backgroundOverlay->setPosition(Vec2(visibleSize/2));
+        backgroundOverlay->setScaleX(visibleSize.width/backgroundOverlay->getContentSize().width);
+        backgroundOverlay->setScaleY(visibleSize.height/backgroundOverlay->getContentSize().height);
+        addChild(backgroundOverlay);
     }
     
     auto playButton = ui::Button::create("buttonRed.png", "buttonRedPressed.png");
@@ -52,7 +58,7 @@ bool MenuScene::init() {
         log("Problem loading 'fonts/Marker Felt.ttf'");
     } else {
         label->setPosition(Vec2(origin.x + visibleSize.width/2, origin.y + visibleSize.height - label->getContentSize().height));
-        this->addChild(label, 1);
+        addChild(label, 1);
     }
     
     return true;

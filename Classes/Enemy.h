@@ -9,6 +9,7 @@
 #define Enemy_h
 
 #include "cocos2d.h"
+#include <string>
 
 USING_NS_CC;
 
@@ -17,7 +18,7 @@ class EnemiesManager;
 class Enemy : public Node
 {
 public:
-    static Enemy* createWithSprite(Sprite* sprite);
+    static Enemy* createWithSprite(std::string spriteFile);
     
     bool initWithSprite(Sprite* sprite);
     virtual void update(float delta);
@@ -26,6 +27,7 @@ public:
     void receiveHit();
     
 private:
+    const float SCALE = 0.2;
     const float SPEED = 40.0;
     
     // implement the "static create()" method manually

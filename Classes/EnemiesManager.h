@@ -29,7 +29,7 @@ public:
     ~EnemiesManager();
 private:
 	const float SPAWN_TIME = 1.0;
-    const int POOL_SIZE = 10;
+    const int POOL_SIZE = 15;
     const float SPAWN_OFFSET = 70.0;
 
 	std::list<Enemy*> enemies;

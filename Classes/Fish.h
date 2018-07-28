@@ -9,6 +9,7 @@
 #define Fish_h
 
 #include "cocos2d.h"
+#include <string>
 
 USING_NS_CC;
 
@@ -17,7 +18,7 @@ class Bullet;
 class Fish : public Node
 {
 public:
-    static Fish* createWithSprites(Sprite* idle, Sprite* shooting);
+    static Fish* createWithSprites(std::string idle, std::string shooting);
     
     bool initWithSprites(Sprite* idle, Sprite* shooting);
     void poolBullet(Bullet* bullet);
@@ -28,10 +29,11 @@ private:
     // implement the "static create()" method manually
     CREATE_FUNC(Fish);
     
+    const float SCALE = 0.2;
     const long BULLET_CADENCY = 500;
     const long SHOOT_DURATION = 300;
     const float SHOOT_ANGLE = 5;
-    const int POOL_SIZE = 5;
+    const int POOL_SIZE = 15;
     const float ROTATION_SPEED = 180;
     const Vec2 BULLET_OFFSET = Vec2(30,0);
     
